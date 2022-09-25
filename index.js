@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const dontenv = require("dotenv");
 const userRoute = require("./routes/user");
+const authRoute = require("./routes/auth");
 
 dontenv.config();
 
@@ -14,6 +15,7 @@ mongoose
   });
 
 app.use(express.json());
+app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 
 app.listen(process.env.PORT || 5000, () => {
