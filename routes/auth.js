@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 
 //
 // .............. REGISTER ..............
-//
 router.post("/register", async (req, res) => {
   // new User builds by the mongo schema from models
   const newUser = new User({
@@ -26,12 +25,10 @@ router.post("/register", async (req, res) => {
 
 //
 // .............. lOGIN ..............
-//
 router.post("/login", async (req, res) => {
   try {
     // Validate the user exists in mongo database
     const user = await User.findOne({ username: req.body.username });
-    console.log(user);
     !user && res.status(401).json("Wrong credentials");
 
     // Decrypt the hash into a sequence of numbers
