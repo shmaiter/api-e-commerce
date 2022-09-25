@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJS = require("crypto-js");
+const jwt = require("jsonwebtoken");
 
 //
 // .............. REGISTER ..............
@@ -33,19 +34,26 @@ router.post("/login", async (req, res) => {
     console.log(user);
     !user && res.status(401).json("Wrong credentials");
 
-    // const dbHashedPassword = user.password;
     // Decrypt the hash into a sequence of numbers
     const dbHashPassword = CryptoJS.AES.decrypt(user.password, process.env.PASS_SEC);
     // Parse the sequence of numbers into the actual user password
-    const password = dbHashPassword.toString(CryptoJS.enc.Utf8);
-    console.log(password);
-    // const loginHashedPassword = CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString();
-    // console.log("loginHashedPassword: " + loginHashedPassword);
-    // console.log("dbHashedPassword: " + dbHashedPassword);
+    const readablePassword = dbHashPassword.toString(CryptoJS.enc.Utf8);
+    readablePassword !== req.body.password && res.status(401).json("Wrong credentials");
 
-    password !== req.body.password && res.status(401).json("Wrong credentials");
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SEC,
+      { expiresIn: "3d" }
+    );
 
-    res.status(200).json(user);
+    // Deconstruction technique
+    // Separate password from DB response and return the rest of the content to client side.
+    const { password, ...others } = user._doc;
+
+    res.status(200).json({ ...others, accessToken });
   } catch (err) {}
 });
 
