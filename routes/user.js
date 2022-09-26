@@ -34,16 +34,29 @@ router.delete("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-// // .............. GET USER ..............
-// router.get("/:id", verifyTokenAndAdmin, async (req, res) {
-//   try {
-//     const user = await User.findById(req.params.id);
-//     const { password, ...others } = user._doc;
+// .............. GET USER ..............
+router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const { password, ...others } = user._doc;
 
-//     res.status(200).json({ ...others });
-//   } catch (err) {
-//     res.status(500).json(err)
-//   }
-// });
+    res.status(200).json({ ...others });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// .............. GET ALL USERS OR QUERY  ..............
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  const query = req.query.new;
+  try {
+    // if there's a query retrieve the last 5 added users, otherwise return them all.
+    const users = query ? await User.find().sort({ _id: -1 }).limit(5) : await User.find();
+
+    res.status(200).json({ users });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
