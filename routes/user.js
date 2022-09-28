@@ -25,7 +25,7 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 // .............. DELETE ..............
-router.delete("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
 
@@ -61,10 +61,9 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 // .............. GET USER STATS  ..............
-router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
+router.get("/stats/month", verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-
   try {
     const data = await User.aggregate([
       { $match: { createdAt: { $gte: lastYear } } },
@@ -75,8 +74,7 @@ router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
       },
       {
         $group: {
-          _id: uuidv4(),
-          month: "$month",
+          _id: "$month",
           total: { $sum: 1 },
         },
       },
