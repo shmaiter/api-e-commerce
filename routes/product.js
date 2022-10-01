@@ -55,17 +55,25 @@ router.get("/:id", async (req, res) => {
 });
 
 // .............. GET ALL PRODUCTS OR QUERY  ..............
-// router.get("/", verifyTokenAndAdmin, async (req, res) => {
-//   const query = req.query.new;
-//   try {
-//     // if there's a query retrieve the last 5 added users, otherwise return them all.
-//     const users = query ? await User.find().sort({ _id: -1 }).limit(5) : await User.find();
+router.get("/", async (req, res) => {
+  const qNew = req.query.new;
+  const qCategory = req.query.category;
+  try {
+    let products;
 
-//     res.status(200).json({ users });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+    if (qNew) {
+      products = await Product.find().sort({ createdAt: -1 }).limit(1);
+    } else if (qCategory) {
+      products = await Product.find({ categories: { $in: [qCategory] } });
+    } else {
+      products = await Product.find();
+    }
+
+    res.status(200).json({ products });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 //   // .............. GET USER STATS  ..............
 //   router.get("/stats/month", verifyTokenAndAdmin, async (req, res) => {
