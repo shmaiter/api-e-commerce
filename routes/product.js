@@ -16,47 +16,43 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 // .............. UPDATE ..............
-// router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-//     if (req.body.password) {
-//       req.body.password = CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString();
-//     }
+// router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 
 //     try {
-//       const updatedUser = await User.findByIdAndUpdate(
+//       const updatedProduct = await Product.findByIdAndUpdate(
 //         req.params.id,
 //         {
 //           $set: req.body,
 //         },
 //         { new: true }
 //       );
-//       res.status(200).json(updatedUser);
+//       res.status(200).json(updatedProduct);
 //     } catch (err) {
 //       res.status(500).json(err);
 //     }
 //   });
 
-//   // .............. DELETE ..............
-//   router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
-//     try {
-//       await User.findByIdAndDelete(req.params.id);
+// .............. DELETE ..............
+router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
 
-//       res.status(200).json("User has been deleted...");
-//     } catch (err) {
-//       res.status(500).json(err);
-//     }
-//   });
+    res.status(200).json("Product has been deleted...");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-//   // .............. GET USER ..............
-//   router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
-//     try {
-//       const user = await User.findById(req.params.id);
-//       const { password, ...others } = user._doc;
+// .............. GET PRODUCT ..............
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
 
-//       res.status(200).json({ ...others });
-//     } catch (err) {
-//       res.status(500).json(err);
-//     }
-//   });
+//     res.status(200).json({ product });
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 //   // .............. GET ALL USERS OR QUERY  ..............
 //   router.get("/", verifyTokenAndAdmin, async (req, res) => {
