@@ -43,29 +43,29 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-// .............. GET PRODUCT ..............
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const product = await Product.findById(req.params.id);
+// .............. GET PRODUCT..............
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
 
-//     res.status(200).json({ product });
+    res.status(200).json({ product });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// .............. GET ALL PRODUCTS OR QUERY  ..............
+// router.get("/", verifyTokenAndAdmin, async (req, res) => {
+//   const query = req.query.new;
+//   try {
+//     // if there's a query retrieve the last 5 added users, otherwise return them all.
+//     const users = query ? await User.find().sort({ _id: -1 }).limit(5) : await User.find();
+
+//     res.status(200).json({ users });
 //   } catch (err) {
 //     res.status(500).json(err);
 //   }
 // });
-
-//   // .............. GET ALL USERS OR QUERY  ..............
-//   router.get("/", verifyTokenAndAdmin, async (req, res) => {
-//     const query = req.query.new;
-//     try {
-//       // if there's a query retrieve the last 5 added users, otherwise return them all.
-//       const users = query ? await User.find().sort({ _id: -1 }).limit(5) : await User.find();
-
-//       res.status(200).json({ users });
-//     } catch (err) {
-//       res.status(500).json(err);
-//     }
-//   });
 
 //   // .............. GET USER STATS  ..............
 //   router.get("/stats/month", verifyTokenAndAdmin, async (req, res) => {
