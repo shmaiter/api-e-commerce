@@ -20,7 +20,7 @@ mongoose
 
 app.use(
     cors({
-        origin: ["http://localhost:3000", "http://localhost:3001"],
+        origin: ["https://bloom-shop-client.onrender.com"],
     })
 );
 app.use(express.json());
